@@ -58,52 +58,11 @@ public class MainController {
 	
 	@Autowired
 	todolistRepo todolistRepo;
-	
-	private static final String APPLICATION_NAME = "GmailAlexa";
-	private static HttpTransport httpTransport;
-	private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
-	private static com.google.api.services.gmail.Gmail client;
-
-	GoogleClientSecrets clientSecrets;
-	GoogleAuthorizationCodeFlow flow;
-	Credential credential;
-
-	@Value("${gmail.client.clientId}")
-	private String clientId;
-
-	@Value("${gmail.client.clientSecret}")
-	private String clientSecret;
-
-	@Value("${gmail.client.redirectUri}")
-	private String redirectUri;
-
-	@RequestMapping(value = "/login/gmail", method = RequestMethod.GET)
-	public RedirectView googleConnectionStatus(HttpServletRequest request) throws Exception {
-		return new RedirectView(authorize());
-	}
-
-	private String authorize() throws Exception {
-		AuthorizationCodeRequestUrl authorizationUrl;
-		if (flow == null) {
-			Details web = new Details();
-			web.setClientId(clientId);
-			web.setClientSecret(clientSecret);
-			clientSecrets = new GoogleClientSecrets().setWeb(web);
-			httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-			flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY, clientSecrets,
-					Collections.singleton(GmailScopes.GMAIL_READONLY)).build();
-		}
-		authorizationUrl = flow.newAuthorizationUrl().setRedirectUri(redirectUri);
-
-		System.out.println("gamil authorizationUrl ->" + authorizationUrl);
-		return authorizationUrl.build();
-	}
 
 	@GetMapping("/")
 	public String helloWorld() {
 		return "Hello World";
 	}
-	
 	
 	@GetMapping("/todolist")
 	public List<todolist> getAllList() {
